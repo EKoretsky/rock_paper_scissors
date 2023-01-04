@@ -1,29 +1,31 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:ansicolor/ansicolor.dart';
-
-AnsiPen bluePen = AnsiPen()..blue(bold: true);
-AnsiPen redPen = AnsiPen()..red(bold: true);
-AnsiPen greenPen = AnsiPen()..green(bold: true);
-
-enum Move {rock, paper, scissors}
+enum Move { rock, paper, scissors }
 
 void main(List<String> args) {
   final randomGenerator = Random();
 
-  while(true) {
-    stdout.write(bluePen('Rock, paper, scissors? (r/p/s) '));
-    var input = stdin.readLineSync();
+  final welcomeString = '''
+==============================================
+Welcome to the game of rock, paper, scissors!
+==============================================
+''';
+
+  stdout.write(welcomeString);
+
+  while (true) {
+    stdout.write('Let\'s choose rock(r), paper(p), scissors(s) or quit(q): ');
+    final input = stdin.readLineSync();
 
     if (input == 'q') {
-      break;
+      exit(0);
     }
 
     if (input == 'r' || input == 'p' || input == 's') {
-      var random = randomGenerator.nextInt(3);
-      var playerMove;
-      var aiMove = Move.values[random];
+      final random = randomGenerator.nextInt(3);
+      late final Move playerMove;
+      final aiMove = Move.values[random];
 
       switch (input) {
         case 'r':
@@ -32,30 +34,30 @@ void main(List<String> args) {
         case 'p':
           playerMove = Move.paper;
           break;
-        default:
+        case 's':
           playerMove = Move.scissors;
-          break;
+        // default:
+        //
       }
 
       print('You played: $playerMove');
       print('AI played: $aiMove');
 
-      var winConditionOne = playerMove == Move.rock && aiMove == Move.scissors;
-      var winConditionTwo = playerMove == Move.paper && aiMove == Move.rock;
-      var winConditionThree = playerMove == Move.scissors && aiMove == Move.paper;
+      final winConditionOne = playerMove == Move.rock && aiMove == Move.scissors;
+      final winConditionTwo = playerMove == Move.paper && aiMove == Move.rock;
+      final winConditionThree = playerMove == Move.scissors && aiMove == Move.paper;
 
-      var winConditions =  winConditionOne || winConditionTwo || winConditionThree;
+      final winConditions = winConditionOne || winConditionTwo || winConditionThree;
 
       if (playerMove == aiMove) {
-        print("It's draw");
+        stdout.write('It\'s draw\n');
       } else if (winConditions) {
-        print(greenPen('You win!!!'));
+        stdout.write('You win!!!🥇\n');
       } else {
-        print('You lose. AI win.');
+        stdout.write('You lose. AI win.😢\n');
       }
-
     } else {
-      print(redPen("Selected: '$input'. It's invalid input"));
+      stdout.write('Selected: $input. It\'s invalid input\n');
     }
   }
 }
